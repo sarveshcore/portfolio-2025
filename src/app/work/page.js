@@ -11,6 +11,24 @@ export default function Work() {
   const projects = {
     personal: [
       {
+        title: "Fitness Buddy 1.0",
+        description: "Fine-tuned Llama-3.2-1B LLM for fitness advice using LoRA adapters",
+        tech: "Python, PyTorch, Hugging Face, PEFT/LoRA",
+        github: "https://huggingface.co/sarveshcore/fitness-buddy-1.0",
+        category: "Personal Project",
+        isPrivate: false,
+        icon: "huggingface"
+      },
+      {
+        title: "Academic Schedule Bot",
+        description: "Automated schedule delivery system using n8n workflows and Telegram",
+        tech: "n8n, JavaScript, Google Sheets API, Telegram API",
+        github: "/work/academic-schedule-bot", // Updated link
+        category: "Personal Project",
+        isPrivate: false,
+        icon: "n8n"
+      },
+      {
         title: "Moody",
         description: "A mood tracking and analysis application",
         tech: "React, Node.js, Firebase",
@@ -48,6 +66,8 @@ export default function Work() {
   const handleProjectClick = (project) => {
     if (project.isPrivate) {
       router.push('/contact');
+    } else if (project.github.startsWith('/')) { // Check for internal links
+      router.push(project.github);
     } else {
       window.open(project.github, '_blank');
     }
@@ -130,6 +150,12 @@ export default function Work() {
                         >
                           <path d="M12 2C9.243 2 7 4.243 7 7v3H6c-1.103 0-2 .897-2 2v8c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-8c0-1.103-.897-2-2-2h-1V7c0-2.757-2.243-5-5-5zM9 7c0-1.654 1.346-3 3-3s3 1.346 3 3v3H9V7zm4 10.723V20h-2v-2.277c-.595-.347-1-.984-1-1.723 0-1.103.897-2 2-2s2 .897 2 2c0 .738-.404 1.376-1 1.723z"/>
                         </svg>
+                      ) : project.icon === 'n8n' ? (
+                        <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/>
+                        </svg>
+                      ) : project.icon === 'huggingface' ? (
+                        <span className="text-3xl">🤗</span>
                       ) : (
                         <svg
                           className="w-8 h-8"
