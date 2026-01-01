@@ -3,6 +3,7 @@ import Navigation from '@/components/Navigation';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import PieChartCard from '@/components/charts/PieChartCard';
 
 export default function Work() {
   const [activeCategory, setActiveCategory] = useState('all');
@@ -57,11 +58,19 @@ export default function Work() {
   };
 
   const allProjects = [...projects.personal, ...projects.freelance];
-  const displayProjects = activeCategory === 'all' 
-    ? allProjects 
-    : activeCategory === 'personal' 
-      ? projects.personal 
+  const displayProjects = activeCategory === 'all'
+    ? allProjects
+    : activeCategory === 'personal'
+      ? projects.personal
       : projects.freelance;
+
+  // Tech stack distribution data
+  const techStackData = [
+    { name: 'Frontend', value: 40, fill: '#fff' },
+    { name: 'Backend', value: 30, fill: 'rgba(255,255,255,0.7)' },
+    { name: 'Cloud/DevOps', value: 20, fill: 'rgba(255,255,255,0.4)' },
+    { name: 'AI/ML', value: 10, fill: 'rgba(59,130,246,0.6)' }
+  ];
 
   const handleProjectClick = (project) => {
     if (project.isPrivate) {
@@ -78,23 +87,42 @@ export default function Work() {
       <Navigation />
       <div className="min-h-screen bg-black text-white">
         <div className="max-w-7xl mx-auto px-8 pt-32 pb-20">
-          <h1 className="text-7xl font-bold mb-16 tracking-tight">WORK</h1>
-          
-          {/* Filter buttons */}
-          <div className="flex gap-4 mb-12">
-            {['all', 'personal', 'freelance'].map((category) => (
-              <button
-                key={category}
-                onClick={() => setActiveCategory(category)}
-                className={`px-6 py-2 text-sm tracking-wider uppercase transition-all ${
-                  activeCategory === category
-                    ? 'bg-white text-black'
-                    : 'bg-white/5 text-white/60 hover:bg-white/10'
-                }`}
-              >
-                {category}
-              </button>
-            ))}
+          <h1 className="text-7xl font-bold mb-16 tracking-tight bg-gradient-to-r from-white via-white to-white/60 bg-clip-text text-transparent">
+            WORK
+          </h1>
+
+          {/* Filter buttons and Pie Chart */}
+          <div className="flex items-start justify-between mb-12">
+            <div className="flex gap-4">
+              {[
+                { key: 'all', label: 'All', count: allProjects.length },
+                { key: 'personal', label: 'Personal', count: projects.personal.length },
+                { key: 'freelance', label: 'Freelance', count: projects.freelance.length }
+              ].map(({ key, label, count }) => (
+                <button
+                  key={key}
+                  onClick={() => setActiveCategory(key)}
+                  className={`relative px-6 py-2 text-sm tracking-wider uppercase transition-all ${
+                    activeCategory === key
+                      ? 'bg-white text-black'
+                      : 'bg-white/5 text-white/60 hover:bg-white/10'
+                  }`}
+                >
+                  {label} ({count})
+                  {activeCategory === key && (
+                    <motion.div
+                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-500"
+                      layoutId="activeFilter"
+                    />
+                  )}
+                </button>
+              ))}
+            </div>
+
+            {/* Tech Stack Pie Chart */}
+            <div className="w-80">
+              <PieChartCard data={techStackData} title="Tech Stack Distribution" size={250} />
+            </div>
           </div>
 
           {/* Freelance notice */}
@@ -111,31 +139,51 @@ export default function Work() {
             </motion.div>
           )}
 
-          <div className="space-y-1">
+          <div className="space-y-8">
             {displayProjects.map((project, index) => (
               <motion.div
                 key={index}
-                className="group relative h-96 bg-white/5 hover:bg-white/10 transition-all cursor-pointer overflow-hidden"
+                className="group relative h-96 bg-white/5 hover:bg-white/10 transition-all cursor-pointer overflow-hidden border border-white/10 rounded-lg"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1, duration: 0.5 }}
                 whileHover={{ y: -5 }}
                 onClick={() => handleProjectClick(project)}
               >
+                {/* Corner accents */}
+                <div className="absolute top-0 left-0 w-12 h-12 border-t-2 border-l-2 border-white/0 group-hover:border-white/40 transition-all duration-500" />
+                <div className="absolute top-0 right-0 w-12 h-12 border-t-2 border-r-2 border-white/0 group-hover:border-white/40 transition-all duration-500" />
+                <div className="absolute bottom-0 left-0 w-12 h-12 border-b-2 border-l-2 border-white/0 group-hover:border-white/40 transition-all duration-500" />
+                <div className="absolute bottom-0 right-0 w-12 h-12 border-b-2 border-r-2 border-white/0 group-hover:border-white/40 transition-all duration-500" />
+
+                {/* Sequential number */}
+                <span className="absolute top-6 left-6 text-white/10 text-7xl font-bold group-hover:text-white/20 transition-colors">
+                  {String(index + 1).padStart(2, '0')}
+                </span>
+
                 <div className="absolute inset-0 flex items-center justify-between px-12">
-                  <div>
+                  <div className="max-w-2xl">
                     <p className="text-sm tracking-widest text-white/40 mb-2">
                       {project.category} {project.isPrivate && '• PRIVATE'}
                     </p>
                     <p className="text-6xl font-bold tracking-tight mb-4">
                       {project.title}
                     </p>
-                    <p className="text-white/60 text-sm tracking-wider mb-2">
+                    <p className="text-white/60 text-sm tracking-wider mb-4">
                       {project.description}
                     </p>
-                    <p className="text-white/40 text-xs tracking-wider">
-                      {project.tech}
-                    </p>
+
+                    {/* Tech tag badges */}
+                    <div className="flex flex-wrap gap-2">
+                      {project.tech.split(',').map((tech, i) => (
+                        <span
+                          key={i}
+                          className="px-3 py-1 bg-white/10 border border-white/20 text-xs rounded hover:bg-white/20 transition-colors"
+                        >
+                          {tech.trim()}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                   <div className="flex flex-col items-end">
                     <motion.div
@@ -169,9 +217,21 @@ export default function Work() {
                   </div>
                 </div>
 
+                {/* Stats overlay on hover */}
+                <motion.div
+                  className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  initial={false}
+                >
+                  <div className="flex gap-6 text-xs text-white/60">
+                    <span>TYPE: {project.category}</span>
+                    <span>YEAR: 2024-2025</span>
+                    {project.isPrivate && <span className="text-blue-400">🔒 PRIVATE</span>}
+                  </div>
+                </motion.div>
+
                 {/* Hover gradient */}
                 <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-blue-500/0 via-blue-500/5 to-blue-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                  className="absolute inset-0 bg-gradient-to-r from-blue-500/0 via-blue-500/5 to-blue-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
                   initial={false}
                 />
               </motion.div>

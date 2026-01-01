@@ -3,6 +3,9 @@ import Navigation from '@/components/Navigation';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { useCursor } from '@/contexts/CursorContext';
+import RadarChartCard from '@/components/charts/RadarChartCard';
+import BarChartCard from '@/components/charts/BarChartCard';
+import SectionDivider from '@/components/SectionDivider';
 
 export default function About() {
   const [openSections, setOpenSections] = useState({});
@@ -24,6 +27,25 @@ export default function About() {
     "APIs": ["RESTful API development and integration"],
     "Tools & Frameworks": ["Frontend Tools: Visual Studio Code, Tailwind CSS", "Backend Tools: Node.js, Express", "Cloud/Infra: Firebase, GCP, Terraform"]
   };
+
+  // Skills radar chart data
+  const skillsRadarData = [
+    { skill: 'Frontend', value: 90 },
+    { skill: 'Backend', value: 85 },
+    { skill: 'DevOps', value: 80 },
+    { skill: 'Database', value: 85 },
+    { skill: 'Cloud', value: 75 },
+    { skill: 'AI/ML', value: 70 }
+  ];
+
+  // Tech stack distribution data
+  const techStackData = [
+    { name: 'React/Next.js', value: 2 },
+    { name: 'Node.js', value: 3 },
+    { name: 'Firebase', value: 2 },
+    { name: 'Python', value: 1 },
+    { name: 'APIs', value: 3 }
+  ];
 
   // Animation variants
   const containerVariants = {
@@ -65,8 +87,8 @@ export default function About() {
         variants={containerVariants}
       >
         <div className="max-w-7xl mx-auto px-8 pt-32 pb-20">
-          <motion.h1 
-            className="text-7xl font-bold mb-16 tracking-tight"
+          <motion.h1
+            className="text-7xl font-bold mb-16 tracking-tight bg-gradient-to-r from-white via-white to-white/60 bg-clip-text text-transparent"
             variants={titleVariants}
           >
             ABOUT
@@ -108,10 +130,22 @@ export default function About() {
               </motion.p>
             </motion.div>
 
-            <motion.div 
+            <motion.div
               className="space-y-8"
               variants={itemVariants}
             >
+              {/* Skills Radar Chart */}
+              <motion.div variants={itemVariants}>
+                <RadarChartCard data={skillsRadarData} title="Skills Overview" />
+              </motion.div>
+
+              {/* Tech Stack Distribution */}
+              <motion.div variants={itemVariants}>
+                <BarChartCard data={techStackData} title="Technology Usage" layout="vertical" />
+              </motion.div>
+
+              <SectionDivider />
+
               <motion.div variants={itemVariants}>
                 <h3 className="text-sm tracking-widest text-white/60 mb-4">TECHNICAL SKILLS</h3>
                 <motion.div 
@@ -164,30 +198,59 @@ export default function About() {
                 </motion.div>
               </motion.div>
               
-              <motion.div 
+              <motion.div
                 variants={itemVariants}
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true, margin: "-100px" }}
               >
                 <h3 className="text-sm tracking-widest text-white/60 mb-4">EXPERIENCE</h3>
-                <motion.div 
+                <motion.div
                   className="border border-white/10 rounded-lg p-6 space-y-4"
                   variants={itemVariants}
                   whileHover={{ scale: 1.01, transition: { duration: 0.2 } }}
                 >
                   <div>
+                    <div className="inline-block px-3 py-1 bg-blue-500/20 border border-blue-500/30 rounded text-xs text-blue-400 mb-3">
+                      June 2025 - July 2025
+                    </div>
                     <h4 className="text-xl font-bold text-white mb-1">MERN Stack Developer Intern</h4>
-                    <p className="text-white/60 text-sm mb-2">Klariti Learning Innovations Pvt. Ltd. • June 2025 - July 2025</p>
+                    <p className="text-white/60 text-sm mb-4">Klariti Learning Innovations Pvt. Ltd.</p>
                   </div>
-                  <ul className="space-y-2 text-white/70 text-sm leading-relaxed">
-                    <li>• Gained hands-on experience in DevOps, working extensively with CI/CD pipelines to automate build and deployment workflows.</li>
-                    <li>• Deployed applications on Google Cloud Platform (GCP), improving scalability and reliability.</li>
-                    <li>• Actively contributed to streamlining deployment processes, enabling faster delivery and reducing deployment errors.</li>
-                    <li>• Contributed to frontend development using Tailwind CSS, building responsive and user-friendly interfaces.</li>
-                    <li>• Worked with MongoDB for data management, integrating databases with backend services to ensure smooth interaction with the frontend.</li>
-                    <li>• Explored the intersection of DevOps and full-stack development, strengthening technical expertise in end-to-end software delivery.</li>
-                  </ul>
+
+                  {/* Timeline with accomplishments */}
+                  <div className="relative pl-8">
+                    {/* Vertical line */}
+                    <div className="absolute left-0 top-2 bottom-2 w-0.5 bg-white/10" />
+
+                    <motion.ul
+                      className="space-y-4 text-white/70 text-sm leading-relaxed"
+                      variants={containerVariants}
+                    >
+                      {[
+                        'Gained hands-on experience in DevOps, working extensively with CI/CD pipelines to automate build and deployment workflows.',
+                        'Deployed applications on Google Cloud Platform (GCP), improving scalability and reliability.',
+                        'Actively contributed to streamlining deployment processes, enabling faster delivery and reducing deployment errors.',
+                        'Contributed to frontend development using Tailwind CSS, building responsive and user-friendly interfaces.',
+                        'Worked with MongoDB for data management, integrating databases with backend services to ensure smooth interaction with the frontend.',
+                        'Explored the intersection of DevOps and full-stack development, strengthening technical expertise in end-to-end software delivery.'
+                      ].map((accomplishment, i) => (
+                        <motion.li
+                          key={i}
+                          className="relative"
+                          variants={itemVariants}
+                          initial={{ opacity: 0, x: -20 }}
+                          whileInView={{ opacity: 1, x: 0 }}
+                          viewport={{ once: true }}
+                          transition={{ delay: i * 0.1 }}
+                        >
+                          {/* Dot marker */}
+                          <div className="absolute -left-8 top-1.5 w-3 h-3 rounded-full bg-blue-500 border-2 border-black" />
+                          {accomplishment}
+                        </motion.li>
+                      ))}
+                    </motion.ul>
+                  </div>
                 </motion.div>
               </motion.div>
             </motion.div>

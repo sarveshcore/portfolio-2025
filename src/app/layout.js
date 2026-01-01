@@ -1,6 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import CursorFollower from "@/components/CursorFollower";
 import { CursorProvider } from "@/contexts/CursorContext";
+import Chatbot from "@/components/Chatbot";
 import "./globals.css";
 import Navigation from "@/components/Navigation";
 
@@ -30,6 +31,7 @@ export default function RootLayout({ children }) {
           <CursorFollower />
           <Navigation />
           {children}
+          <Chatbot />
         </CursorProvider>
       </body>
     </html>

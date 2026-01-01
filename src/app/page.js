@@ -3,6 +3,7 @@ import Image from "next/image";
 import Navigation from "@/components/Navigation";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import SectionDivider from "@/components/SectionDivider";
 
 export default function Home() {
     // Animation variants
@@ -63,15 +64,15 @@ export default function Home() {
             >
               {/* Animated hero text */}
               <div className="overflow-hidden">
-                <motion.h1 
-                  className="text-[12vw] font-bold leading-none tracking-tight"
+                <motion.h1
+                  className="text-[12vw] font-bold leading-none tracking-tight bg-gradient-to-r from-white via-white to-white/60 bg-clip-text text-transparent"
                   custom={0}
                   variants={textReveal}
                 >
                   PORT
                 </motion.h1>
-                <motion.h1 
-                  className="text-[12vw] font-bold leading-none tracking-tight -mt-4"
+                <motion.h1
+                  className="text-[12vw] font-bold leading-none tracking-tight -mt-4 bg-gradient-to-r from-white via-white to-white/60 bg-clip-text text-transparent"
                   custom={1}
                   variants={textReveal}
                 >
@@ -144,9 +145,49 @@ export default function Home() {
             </motion.div>
           </div>
 
+          {/* Stats Overview Section */}
+          <motion.div
+            className="grid grid-cols-4 gap-8 mb-20"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            variants={staggerContainer}
+          >
+            {[
+              { label: "PROJECTS", value: "6+", icon: "📦" },
+              { label: "TECHNOLOGIES", value: "25+", icon: "⚡" },
+              { label: "EXPERIENCE", value: "2025", icon: "💼" },
+              { label: "CLIENTS", value: "Global", icon: "🌍" }
+            ].map((stat, index) => (
+              <motion.div
+                key={index}
+                className="relative p-6 bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 transition-all cursor-default group"
+                variants={cardVariants}
+                whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(59,130,246,0.3)" }}
+              >
+                <div className="text-4xl mb-4">{stat.icon}</div>
+                <motion.div
+                  className="text-5xl font-bold mb-2 bg-gradient-to-r from-white to-white/60 bg-clip-text text-transparent"
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8, delay: index * 0.1 }}
+                >
+                  {stat.value}
+                </motion.div>
+                <div className="text-xs tracking-widest text-white/60">{stat.label}</div>
+
+                {/* Glow effect on hover */}
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/0 via-blue-500/5 to-blue-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-lg pointer-events-none" />
+              </motion.div>
+            ))}
+          </motion.div>
+
+          <SectionDivider />
+
           {/* Featured Section with scroll animation */}
-          <motion.div 
-            className="border-t border-white/10 pt-20 mt-20"
+          <motion.div
+            className="pt-20"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true, margin: "-100px" }}
@@ -166,9 +207,9 @@ export default function Home() {
               ].map((item, index) => (
                 <motion.div
                   key={index}
-                  className="p-8 bg-white/5 hover:bg-white/10 transition-colors cursor-pointer relative group"
+                  className="p-8 bg-white/5 hover:bg-white/10 transition-colors cursor-pointer relative group border border-white/10"
                   variants={cardVariants}
-                  whileHover={{ 
+                  whileHover={{
                     y: -10,
                     boxShadow: "0 20px 40px rgba(255,255,255,0.1)",
                     transition: { duration: 0.3 }
@@ -190,15 +231,26 @@ export default function Home() {
                     e.currentTarget.style.transform = "perspective(1000px) rotateX(0deg) rotateY(0deg)";
                   }}
                 >
+                  {/* All 4 corner accents */}
+                  <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-white/0 group-hover:border-white/40 transition-all duration-500" />
+                  <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-white/0 group-hover:border-white/40 transition-all duration-500" />
+                  <div className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-white/0 group-hover:border-white/40 transition-all duration-500" />
+                  <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-white/0 group-hover:border-white/40 transition-all duration-500" />
+
+                  {/* Sequential number */}
+                  <span className="absolute top-4 right-4 text-white/10 text-6xl font-bold group-hover:text-white/20 transition-colors">
+                    {String(index + 1).padStart(2, '0')}
+                  </span>
+
                   {/* Animated gradient overlay */}
                   <motion.div
-                    className="absolute inset-0 bg-gradient-to-br from-white/0 via-white/5 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                    className="absolute inset-0 bg-gradient-to-br from-white/0 via-white/5 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
                     initial={false}
                   />
-                  
+
                   <div className="relative z-10">
-                    <motion.p 
-                      className="text-white/60 mb-2"
+                    <motion.p
+                      className="text-white/60 mb-2 text-lg"
                       initial={{ x: 0 }}
                       whileHover={{ x: 5 }}
                       transition={{ duration: 0.2 }}
@@ -207,13 +259,6 @@ export default function Home() {
                     </motion.p>
                     <p className="text-white">{item.desc}</p>
                   </div>
-
-                  {/* Corner accent */}
-                  <motion.div
-                    className="absolute top-0 right-0 w-0 h-0.5 bg-white"
-                    whileHover={{ width: "100%" }}
-                    transition={{ duration: 0.4 }}
-                  />
                 </motion.div>
               ))}
             </motion.div>
